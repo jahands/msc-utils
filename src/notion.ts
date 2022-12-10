@@ -5,11 +5,11 @@ export class ThrottledQueue {
   private queue: PQueue
   private throttle
 
-  constructor(concurrency = 8) {
+  constructor(concurrency = 8, interval = 1000, limit = 3) {
     this.queue = new PQueue({ concurrency });
     this.throttle = pThrottle({
-      limit: 3,
-      interval: 1000
+      limit,
+      interval
     });
   }
 
