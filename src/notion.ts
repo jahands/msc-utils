@@ -5,7 +5,7 @@ export class ThrottledQueue {
   private queue: PQueue
   private throttle
 
-  constructor(concurrency = 6) {
+  constructor(concurrency = 8) {
     this.queue = new PQueue({ concurrency });
     this.throttle = pThrottle({
       limit: 3,
@@ -14,8 +14,8 @@ export class ThrottledQueue {
   }
 
   async add(fn: () => Promise<void>) {
-    // await this.queue.add(this.throttle(fn))
-    await this.throttle(async () => await this.queue.add(fn))()
+    // await this.throttle(async () => await this.queue.add(fn))()
+    await this.queue.add(this.throttle(fn))
   }
 
   async onIdle() {
