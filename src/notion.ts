@@ -1,11 +1,12 @@
 import pThrottle from 'p-throttle'
+import PQueue from 'p-queue';
 
 export class ThrottledQueue {
-  private queue: Promise<void>[]
+  private queue: PQueue
   private throttle
 
-  constructor() {
-    this.queue = []
+  constructor(concurrency = 6) {
+    this.queue = new PQueue({concurrency});
     this.throttle = pThrottle({
       limit: 3,
       interval: 1000
@@ -13,14 +14,11 @@ export class ThrottledQueue {
   }
 
   async add(fn: () => Promise<void>) {
-    await this.throttle(() => {
-      this.queue.push(fn())
-    })()
+    await this.queue.add(this.throttle(fn))
   }
 
-  async clear() {
-    await Promise.all(this.queue)
-    this.queue.splice(0)
+  async onIdle() {
+    await this.queue.onIdle()
   }
 }
 
