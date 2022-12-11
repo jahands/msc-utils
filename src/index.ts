@@ -8,6 +8,15 @@ export function shuffleArray(array: any[]) {
   }
 }
 
+export function auth(request: Request, allowedKey: string): Response | null {
+  const url = new URL(request.url);
+  const requestKey = url.searchParams.get('key');
+  if (requestKey !== allowedKey) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+  return null;
+}
+
 export class ThrottledQueue {
   private queue: PQueue
   private throttle
