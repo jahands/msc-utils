@@ -30,11 +30,11 @@ export class ThrottledQueue {
   }
 
   async add(fn: () => Promise<void>) {
-    await this.queue.add(this.throttle(fn))
+    return this.queue.add(this.throttle(fn))
   }
 
   async onIdle() {
-    await this.queue.onIdle()
+    return this.queue.onIdle()
   }
 }
 
